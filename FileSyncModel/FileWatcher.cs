@@ -1,34 +1,68 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
+using CB.Model.Prism;
+using Prism.Commands;
 
 
 namespace FileSyncModel
 {
-    public class FileWatcher: IDisposable
+    public class FileWatcher: PrismViewModelBase, IDisposable
     {
         #region Fields
+        private bool _isWatched;
         private FileSystemWatcher _watcher;
+        private readonly string _directory;
         #endregion
 
 
         #region  Constructors & Destructor
         public FileWatcher(string file)
         {
+            if (file == null) throw new ArgumentNullException(nameof(file));
+            if (!System.IO.File.Exists(file)) throw new FileNotFoundException(file);
+
             File = file;
-            var directory = Path.GetDirectoryName(file);
+            _directory = Path.GetDirectoryName(file);
+            if (_directory == null)
+            {
+                //UNDONE
+                return;
+            }
             var fileName = Path.GetFileName(file);
-            if (directory != null)
-                _watcher = new FileSystemWatcher(directory, fileName)
-                {
-                    NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName,
-                };
+
+            _watcher = new FileSystemWatcher(_directory, fileName)
+            {
+                NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite | NotifyFilters.FileName,
+            };
+
+            StartWatchCommand = new DelegateCommand(StartWatch, () => !IsWatched).ObservesProperty(() => IsWatched);
+            StopWatchCommand = new DelegateCommand(StopWatch, () => IsWatched).ObservesProperty(() => IsWatched);
         }
         #endregion
 
 
+        #region  Commands
+        public ICommand StartWatchCommand { get; }
+        public ICommand StopWatchCommand { get; }
+        #endregion
+
+
         #region  Properties & Indexers
-        public string File { get; set; }
+        public string File { get; private set; }
+
+        public bool IsWatched
+        {
+            get { return _isWatched; }
+            set
+            {
+                if (SetProperty(ref _isWatched, value))
+                {
+                    _watcher.EnableRaisingEvents = value;
+                }
+            }
+        }
         #endregion
 
 
@@ -50,26 +84,25 @@ namespace FileSyncModel
         #region Methods
         public void Dispose()
         {
-            if (_watcher != null)
-            {
-                _watcher.Dispose();
-                _watcher = null;
-            }
+            if (_watcher == null) return;
+
+            _watcher.Dispose();
+            _watcher = null;
         }
 
         public void RenameTo(string newFileName)
         {
-            var fullPath = Path.Combine(Path.GetDirectoryName(File), newFileName);
+            var fullPath = Path.Combine(_directory, newFileName);
             if (!System.IO.File.Exists(fullPath)) System.IO.File.Move(File, fullPath);
             File = fullPath;
             _watcher.Filter = newFileName;
         }
 
         public void StartWatch()
-            => _watcher.EnableRaisingEvents = true;
+            => IsWatched = true;
 
         public void StopWatch()
-            => _watcher.EnableRaisingEvents = false;
+            => IsWatched = false;
 
         public void SyncData(byte[] contents)
         {

@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Prism, Version=6.1.0.0, Culture=neutral, PublicKeyToken=91a96d2a154366d8, processorArchitecture=MSIL">
+      <HintPath>..\packages\Prism.Core.6.1.0\lib\net45\Prism.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,6 +53,13 @@
       <Project>{33A5DF99-1312-4023-A6EF-EABB9848F5A6}</Project>
       <Name>CB.Model.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Model\CB.Model.Prism\CB.Model.Prism.csproj">
+      <Project>{6A52CAE9-6F3E-4A20-96EB-0E6116A6709C}</Project>
+      <Name>CB.Model.Prism</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
