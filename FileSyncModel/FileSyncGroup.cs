@@ -11,7 +11,7 @@ using CB.Model.Common;
 
 namespace FileSyncModel
 {
-    public class FileSyncInfo: ObservableObject, IDisposable
+    public class FileSyncGroup: ObservableObject, IDisposable
     {
         #region Fields
         private string _name;
@@ -20,12 +20,12 @@ namespace FileSyncModel
 
 
         #region  Constructors & Destructor
-        public FileSyncInfo()
+        public FileSyncGroup()
         {
             Files.CollectionChanged += Files_CollectionChanged;
         }
 
-        public FileSyncInfo(string name): this()
+        public FileSyncGroup(string name): this()
         {
             Name = name;
         }
@@ -106,12 +106,9 @@ namespace FileSyncModel
         {
             if (newItems == null) return;
 
-            foreach (
-                var file in
-                    newItems.OfType<string>().Select(s => s.ToLowerInvariant()).Where(
-                        s => _watchers.All(w => !w.File.Equals(s))).Distinct().ToArray())
+            foreach (var watcher in newItems.OfType<string>().Select(s => s.ToLowerInvariant()).Where(
+                s => _watchers.All(w => !w.File.Equals(s))).Distinct().Select(file => new FileWatcher(file)))
             {
-                var watcher = new FileWatcher(file);
                 watcher.FileChanged += Watcher_FileChanged;
                 watcher.FileRenamed += Watcher_FileRenamed;
                 _watchers.Add(watcher);

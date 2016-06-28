@@ -66,14 +66,17 @@ namespace FileSyncModel
         }
 
         public void StartWatch()
-        {
-            _watcher.EnableRaisingEvents = true;
-        }
+            => _watcher.EnableRaisingEvents = true;
+
+        public void StopWatch()
+            => _watcher.EnableRaisingEvents = false;
 
         public void SyncData(byte[] contents)
         {
+            StopWatch();
             var data = System.IO.File.ReadAllBytes(File);
             if (!contents.SequenceEqual(data)) System.IO.File.WriteAllBytes(File, contents);
+            StartWatch();
         }
         #endregion
     }

@@ -11,10 +11,10 @@ namespace TestFileSyncConsole
         static void Main(string[] args)
         {
             var vmd = new FileSyncMainViewModel();
-            var fileSync = vmd.AddFileSync("1");
+            var fileSync = vmd.AddSyncGroup("1");
             while (!Equals("n", Console.ReadLine()))
             {
-                vmd.SyncWith(fileSync);
+                vmd.AddFilesToGroup(fileSync);
             }
             Console.WriteLine("Press enter to stop");
             Console.ReadLine();
