@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows.Input;
 using CB.Model.Prism;
+using CB.Prism.Interactivity;
 using Prism.Commands;
 
 
-namespace FileSyncModel
+namespace FileSyncViewModel
 {
     public class FileSyncGroup: PrismViewModelBase, IDisposable
     {
         #region Fields
         private string _name;
+        private FileWatcher _selectedWatcher;
         private readonly ObservableCollection<FileWatcher> _watchers = new ObservableCollection<FileWatcher>();
         #endregion
 
@@ -21,8 +24,12 @@ namespace FileSyncModel
         #region  Constructors & Destructor
         public FileSyncGroup()
         {
-            AddFileCommand = new DelegateCommand<string>(AddFile);
-            RemoveWatcherCommand = new DelegateCommand<FileWatcher>(RemoveWatcher);
+            Disposer = new Disposer(this);
+            AddFileCommand = new DelegateCommand(AddFiles);
+            RemoveWatcherCommand =
+                new DelegateCommand(RemoveWatcher, () => CanRemoveWatcher).ObservesProperty(() => CanRemoveWatcher);
+            StartAllCommand = new DelegateCommand(StartAll);
+            StopAllCommand = new DelegateCommand(StopAll);
         }
 
         public FileSyncGroup(string name): this()
@@ -35,14 +42,27 @@ namespace FileSyncModel
         #region  Commands
         public ICommand AddFileCommand { get; }
         public ICommand RemoveWatcherCommand { get; }
+        public ICommand StartAllCommand { get; }
+        public ICommand StopAllCommand { get; }
         #endregion
 
 
         #region  Properties & Indexers
+        public bool CanRemoveWatcher => SelectedWatcher != null && Watchers.Contains(SelectedWatcher);
+        public Disposer Disposer { get; }
+
+        public CommonInteractionRequest FileRequest { get; } = new CommonInteractionRequest();
+
         public string Name
         {
             get { return _name; }
             set { SetProperty(ref _name, value); }
+        }
+
+        public FileWatcher SelectedWatcher
+        {
+            get { return _selectedWatcher; }
+            set { if (SetProperty(ref _selectedWatcher, value)) NotifyPropertiesChanged(nameof(CanRemoveWatcher)); }
         }
 
         public IEnumerable<FileWatcher> Watchers => _watchers;
@@ -50,13 +70,20 @@ namespace FileSyncModel
 
 
         #region Methods
-        public void AddFile(string file)
+        public void AddFiles()
         {
-            var watcher = new FileWatcher(file);
-            watcher.FileChanged += Watcher_FileChanged;
-            watcher.FileRenamed += Watcher_FileRenamed;
-            _watchers.Add(watcher);
-            watcher.StartWatch();
+            FileRequest.Raise(new OpenFileDialogInfo { MultiSelect = true }, info =>
+            {
+                if (!info.Confirmed) return;
+
+                foreach (var watcher in info.FileNames.Select(file => new FileWatcher(file)))
+                {
+                    watcher.FileChanged += Watcher_FileChanged;
+                    watcher.FileRenamed += Watcher_FileRenamed;
+                    _watchers.Add(watcher);
+                    watcher.StartWatch();
+                }
+            });
         }
 
         public void Dispose()
@@ -68,10 +95,23 @@ namespace FileSyncModel
             _watchers.Clear();
         }
 
-        public void RemoveWatcher(FileWatcher watcher)
+        public void RemoveWatcher()
         {
-            watcher.Dispose();
-            _watchers.Remove(watcher);
+            if (!CanRemoveWatcher) return;
+            SelectedWatcher.Dispose();
+            _watchers.Remove(SelectedWatcher);
+        }
+
+        public void StartAll()
+        {
+            foreach (var watcher in Watchers)
+                watcher.StartWatch();
+        }
+
+        public void StopAll()
+        {
+            foreach (var watcher in Watchers)
+                watcher.StopWatch();
         }
         #endregion
 

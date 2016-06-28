@@ -54,10 +54,6 @@
       <Project>{33a5df99-1312-4023-a6ef-eabb9848f5a6}</Project>
       <Name>CB.Model.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileSyncModel\FileSyncModel.csproj">
-      <Project>{24c8c90b-57f4-473e-b98d-7f87893f952a}</Project>
-      <Name>FileSyncModel</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FileSyncViewModel\FileSyncViewModel.csproj">
       <Project>{76901e70-5cc7-4f69-90bd-726120c0a1f1}</Project>
       <Name>FileSyncViewModel</Name>

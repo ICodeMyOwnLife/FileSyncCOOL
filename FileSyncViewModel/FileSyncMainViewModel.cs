@@ -1,9 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CB.Model.Prism;
-using FileSyncModel;
-using Microsoft.Win32;
 using Prism.Commands;
 
 
@@ -11,59 +10,72 @@ namespace FileSyncViewModel
 {
     public class FileSyncMainViewModel: PrismViewModelBase, IDisposable
     {
+        #region Fields
+        private string _groupName;
+        private readonly ObservableCollection<FileSyncGroup> _groups = new ObservableCollection<FileSyncGroup>();
+        private FileSyncGroup _selectedGroup;
+        #endregion
+
+
         #region  Constructors & Destructor
         public FileSyncMainViewModel()
         {
-            AddSyncGroupCommand = new DelegateCommand<string>(n => AddSyncGroup(n));
-            AddFileToGroupCommand = new DelegateCommand<FileSyncGroup>(g => AddFilesToGroup(g));
+            AddGroupCommand = new DelegateCommand(AddGroup, () => CanAddGroup).ObservesProperty(() => CanAddGroup);
+            RemoveGroupCommand =
+                new DelegateCommand(RemoveGroup, () => CanRemoveGroup).ObservesProperty(() => CanRemoveGroup);
         }
         #endregion
 
 
         #region  Commands
-        public ICommand AddFileToGroupCommand { get; }
-        public ICommand AddSyncGroupCommand { get; }
+        public ICommand AddGroupCommand { get; }
+        public ICommand RemoveGroupCommand { get; }
         #endregion
 
 
         #region  Properties & Indexers
-        public ObservableCollection<FileSyncGroup> SyncGroups { get; } = new ObservableCollection<FileSyncGroup>();
+        public bool CanAddGroup => !string.IsNullOrEmpty(GroupName);
+        public bool CanRemoveGroup => SelectedGroup != null && _groups.Contains(SelectedGroup);
+
+        public string GroupName
+        {
+            get { return _groupName; }
+            set { if (SetProperty(ref _groupName, value)) NotifyPropertiesChanged(nameof(CanAddGroup)); }
+        }
+
+        public IEnumerable<FileSyncGroup> Groups => _groups;
+
+        public FileSyncGroup SelectedGroup
+        {
+            get { return _selectedGroup; }
+            set { if (SetProperty(ref _selectedGroup, value)) NotifyPropertiesChanged(nameof(CanRemoveGroup)); }
+        }
         #endregion
 
 
         #region Methods
-        public string[] AddFilesToGroup(FileSyncGroup fileSync)
+        public void AddGroup()
         {
-            var fileSelect = new OpenFileDialog
-            {
-                CheckFileExists = true,
-                Multiselect = true,
-                ShowReadOnly = false
-            };
-            if (fileSelect.ShowDialog() != true) return null;
-
-            foreach (var file in fileSelect.FileNames)
-            {
-                fileSync.Files.Add(file);
-            }
-            return fileSelect.FileNames;
-        }
-
-        public FileSyncGroup AddSyncGroup(string name)
-        {
-            var fileSync = new FileSyncGroup(name);
-            SyncGroups.Add(fileSync);
-            return fileSync;
+            if (!CanAddGroup) return;
+            var fileSync = new FileSyncGroup(GroupName);
+            _groups.Add(fileSync);
         }
 
         public void Dispose()
         {
-            if (SyncGroups != null)
-            {
-                foreach (var fileSync in SyncGroups) { fileSync.Dispose(); }
-                SyncGroups.Clear();
-            }
+            foreach (var fileSync in Groups) { fileSync.Dispose(); }
+            _groups.Clear();
+        }
+
+        public void RemoveGroup()
+        {
+            if (!CanRemoveGroup) return;
+            SelectedGroup.Dispose();
+            _groups.Remove(SelectedGroup);
         }
         #endregion
     }
 }
+
+// TODO: Use MahAppsApplication
+// TODO: Add Shell Context Menus

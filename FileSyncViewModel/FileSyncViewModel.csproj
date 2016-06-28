@@ -66,7 +66,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileSyncGroup.cs" />
     <Compile Include="FileSyncMainViewModel.cs" />
+    <Compile Include="FileWatcher.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,9 +80,9 @@
       <Project>{6a52cae9-6f3e-4a20-96eb-0e6116a6709c}</Project>
       <Name>CB.Model.Prism</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FileSyncModel\FileSyncModel.csproj">
-      <Project>{24C8C90B-57F4-473E-B98D-7F87893F952A}</Project>
-      <Name>FileSyncModel</Name>
+    <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Prism\CB.Prism.Interactivity\CB.Prism.Interactivity.csproj">
+      <Project>{640c072b-f368-4d76-9969-9c6bfe4070d3}</Project>
+      <Name>CB.Prism.Interactivity</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

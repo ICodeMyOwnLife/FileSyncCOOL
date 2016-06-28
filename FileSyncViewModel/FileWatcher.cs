@@ -6,20 +6,21 @@ using CB.Model.Prism;
 using Prism.Commands;
 
 
-namespace FileSyncModel
+namespace FileSyncViewModel
 {
     public class FileWatcher: PrismViewModelBase, IDisposable
     {
         #region Fields
+        private readonly string _directory;
         private bool _isWatched;
         private FileSystemWatcher _watcher;
-        private readonly string _directory;
         #endregion
 
 
         #region  Constructors & Destructor
         public FileWatcher(string file)
         {
+            Disposer = new Disposer(this);
             if (file == null) throw new ArgumentNullException(nameof(file));
             if (!System.IO.File.Exists(file)) throw new FileNotFoundException(file);
 
@@ -50,6 +51,7 @@ namespace FileSyncModel
 
 
         #region  Properties & Indexers
+        public Disposer Disposer { get; }
         public string File { get; private set; }
 
         public bool IsWatched
