@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vmd="clr-namespace:FileSyncViewModel;assembly=FileSyncViewModel">
+    
+    <DataTemplate x:Key="FileSyncGroupTemplate" DataType="vmd:FileSyncGroup">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Style="{StaticResource TextBlockStyle.CenterAlign}" FontSize="32"
+                       Text="{Binding Name}" />
+            
+            <ListBox Grid.Row="1"></ListBox>
+        </Grid>
+    </DataTemplate>
+</ResourceDictionary>

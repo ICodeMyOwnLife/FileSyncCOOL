@@ -141,3 +141,6 @@ namespace FileSyncViewModel
         #endregion
     }
 }
+
+
+// TODO: Use CollectionCommand with StartAllCommand and StopAllCommand

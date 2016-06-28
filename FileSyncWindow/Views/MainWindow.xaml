@@ -4,13 +4,13 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-                 xmlns:local="clr-namespace:FileSyncWindow"
+                 xmlns:vmd="clr-namespace:FileSyncViewModel;assembly=FileSyncViewModel"
                  mc:Ignorable="d"
                  Title="MainWindow" Height="600" Width="800" Style="{StaticResource MetroWindowStyle}"
-                 WindowStartupLocation="CenterScreen" d:DataContext="{d:DesignInstance local:MainDesignViewModel}">
+                 WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <local:MainViewModel x:Key="MainViewModel" />
+        <vmd:FileSyncMainViewModel x:Key="MainViewModel" />
     </Window.Resources>
 
     <Window.DataContext>
@@ -29,9 +29,18 @@
             <MenuItem Style="{StaticResource AccentMenuItemStyle}" />
         </Menu>
 
+        <!--#region Main Region-->
         <Grid Grid.Row="1">
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid Grid.Column="0" />
+
+            <ContentControl Grid.Column="1" />
         </Grid>
+        <!--#endregion-->
 
         <StatusBar Grid.Row="2" />
     </Grid>
