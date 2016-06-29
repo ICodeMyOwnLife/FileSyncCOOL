@@ -5,17 +5,34 @@
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:vmd="clr-namespace:FileSyncViewModel;assembly=FileSyncViewModel"
+                 xmlns:v="clr-namespace:FileSyncWindow.Views"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:xaml="http://wpf.cb.com/xaml"
                  mc:Ignorable="d"
-                 Title="MainWindow" Height="600" Width="800" Style="{StaticResource MetroWindowStyle}"
-                 WindowStartupLocation="CenterScreen">
+                 Title="File Sync COOL" Height="600" Width="960" Icon="../sync.ico"
+                 Style="{StaticResource MetroWindowStyle}" WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
         <vmd:FileSyncMainViewModel x:Key="MainViewModel" />
+
+        <DataTemplate x:Key="NameColumnTemplate" DataType="vmd:FileSyncGroup">
+            <TextBlock Text="{Binding Name}" />
+        </DataTemplate>
+
+        <DataTemplate x:Key="CountColumnTemplate" DataType="vmd:FileSyncGroup">
+            <TextBlock Text="{Binding Watchers.Count}" HorizontalAlignment="Center" />
+        </DataTemplate>
     </Window.Resources>
 
     <Window.DataContext>
         <StaticResource ResourceKey="MainViewModel" />
     </Window.DataContext>
+
+    <xaml:WindowServices.FocusKeyMap>
+        <xaml:FocusKeyMap>
+            <xaml:FocusKey Key="N" Modifier="Control" TargetName="txtName" />
+        </xaml:FocusKeyMap>
+    </xaml:WindowServices.FocusKeyMap>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -32,14 +49,62 @@
         <!--#region Main Region-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="280" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <DataGrid Grid.Column="0" />
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <ContentControl Grid.Column="1" />
-        </Grid>
+                <GroupBox Header="GROUPS">
+                    <DataGrid IsReadOnly="True" AutoGenerateColumns="False" Margin="0"
+                              ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn Header="Name" SortMemberPath="Name" Width="*"
+                                                    CellTemplate="{StaticResource NameColumnTemplate}" />
+                            <DataGridTemplateColumn Header="Count" SortMemberPath="Watchers.Count" Width="70"
+                                                    CellTemplate="{StaticResource CountColumnTemplate}"
+                                                    HeaderStyle="{StaticResource DataGridColumnHeaderStyle.CenterAlign}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Column="0" Content="_Name:" Target="{Binding ElementName=txtName}" />
+                    <TextBox x:Name="txtName" Grid.Column="1" MinWidth="180"
+                             Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}">
+                        <i:Interaction.Behaviors>
+                            <xaml:EnterToClickBehavior InvokeClickWhenTargetDisabled="False"
+                                                       Target="{x:Reference cmdAdd}" />
+                        </i:Interaction.Behaviors>
+                    </TextBox>
+                </Grid>
+
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="cmdAdd" Grid.Column="0" Content="Add Group" HorizontalAlignment="Stretch"
+                            Command="{Binding AddGroupCommand}" />
+                    <Button Grid.Column="1" Content="Remove Group" HorizontalAlignment="Stretch"
+                            Command="{Binding RemoveGroupCommand}" />
+                </Grid>
+            </Grid>
+
+            <v:FileSyncGroupView Grid.Column="1" DataContext="{Binding SelectedGroup}"
+                                     Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}" />
+            </Grid>
         <!--#endregion-->
 
         <StatusBar Grid.Row="2" />

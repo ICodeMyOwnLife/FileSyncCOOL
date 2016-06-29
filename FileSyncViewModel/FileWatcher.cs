@@ -12,6 +12,7 @@ namespace FileSyncViewModel
     {
         #region Fields
         private readonly string _directory;
+        private string _file;
         private bool _isWatched;
         private FileSystemWatcher _watcher;
         #endregion
@@ -52,7 +53,12 @@ namespace FileSyncViewModel
 
         #region  Properties & Indexers
         public Disposer Disposer { get; }
-        public string File { get; private set; }
+
+        public string File
+        {
+            get { return _file; }
+            private set { SetProperty(ref _file, value); }
+        }
 
         public bool IsWatched
         {
@@ -108,10 +114,10 @@ namespace FileSyncViewModel
 
         public void SyncData(byte[] contents)
         {
-            StopWatch();
+            _watcher.EnableRaisingEvents = false;
             var data = System.IO.File.ReadAllBytes(File);
             if (!contents.SequenceEqual(data)) System.IO.File.WriteAllBytes(File, contents);
-            StartWatch();
+            _watcher.EnableRaisingEvents = true;
         }
         #endregion
     }

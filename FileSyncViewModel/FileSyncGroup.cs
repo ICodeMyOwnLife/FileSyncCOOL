@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -25,11 +25,13 @@ namespace FileSyncViewModel
         public FileSyncGroup()
         {
             Disposer = new Disposer(this);
-            AddFileCommand = new DelegateCommand(AddFiles);
+            AddFilesCommand = new DelegateCommand(AddFiles);
             RemoveWatcherCommand =
                 new DelegateCommand(RemoveWatcher, () => CanRemoveWatcher).ObservesProperty(() => CanRemoveWatcher);
-            StartAllCommand = new DelegateCommand(StartAll);
-            StopAllCommand = new DelegateCommand(StopAll);
+            StartAllCommand = new CollectionCommand<ObservableCollection<FileWatcher>, FileWatcher>(_watchers,
+                watcher => watcher.StartWatchCommand, ActiveStategy.WhenAny);
+            StopAllCommand = new CollectionCommand<ObservableCollection<FileWatcher>, FileWatcher>(_watchers,
+                watcher => watcher.StopWatchCommand, ActiveStategy.WhenAny);
         }
 
         public FileSyncGroup(string name): this()
@@ -40,7 +42,7 @@ namespace FileSyncViewModel
 
 
         #region  Commands
-        public ICommand AddFileCommand { get; }
+        public ICommand AddFilesCommand { get; }
         public ICommand RemoveWatcherCommand { get; }
         public ICommand StartAllCommand { get; }
         public ICommand StopAllCommand { get; }
@@ -48,7 +50,7 @@ namespace FileSyncViewModel
 
 
         #region  Properties & Indexers
-        public bool CanRemoveWatcher => SelectedWatcher != null && Watchers.Contains(SelectedWatcher);
+        public bool CanRemoveWatcher => SelectedWatcher != null && _watchers.Contains(SelectedWatcher);
         public Disposer Disposer { get; }
 
         public CommonInteractionRequest FileRequest { get; } = new CommonInteractionRequest();
@@ -65,7 +67,7 @@ namespace FileSyncViewModel
             set { if (SetProperty(ref _selectedWatcher, value)) NotifyPropertiesChanged(nameof(CanRemoveWatcher)); }
         }
 
-        public IEnumerable<FileWatcher> Watchers => _watchers;
+        public ICollection Watchers => _watchers;
         #endregion
 
 
@@ -88,7 +90,7 @@ namespace FileSyncViewModel
 
         public void Dispose()
         {
-            foreach (var fileWatcher in Watchers)
+            foreach (var fileWatcher in _watchers)
             {
                 fileWatcher.Dispose();
             }
@@ -100,18 +102,6 @@ namespace FileSyncViewModel
             if (!CanRemoveWatcher) return;
             SelectedWatcher.Dispose();
             _watchers.Remove(SelectedWatcher);
-        }
-
-        public void StartAll()
-        {
-            foreach (var watcher in Watchers)
-                watcher.StartWatch();
-        }
-
-        public void StopAll()
-        {
-            foreach (var watcher in Watchers)
-                watcher.StopWatch();
         }
         #endregion
 

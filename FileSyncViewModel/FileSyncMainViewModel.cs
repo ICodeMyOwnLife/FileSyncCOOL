@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CB.Model.Prism;
@@ -43,7 +43,7 @@ namespace FileSyncViewModel
             set { if (SetProperty(ref _groupName, value)) NotifyPropertiesChanged(nameof(CanAddGroup)); }
         }
 
-        public IEnumerable<FileSyncGroup> Groups => _groups;
+        public ICollection Groups => _groups;
 
         public FileSyncGroup SelectedGroup
         {
@@ -57,13 +57,15 @@ namespace FileSyncViewModel
         public void AddGroup()
         {
             if (!CanAddGroup) return;
-            var fileSync = new FileSyncGroup(GroupName);
-            _groups.Add(fileSync);
+            var syncGroup = new FileSyncGroup(GroupName);
+            _groups.Add(syncGroup);
+            SelectedGroup = syncGroup;
+            GroupName = null;
         }
 
         public void Dispose()
         {
-            foreach (var fileSync in Groups) { fileSync.Dispose(); }
+            foreach (var fileSync in _groups) { fileSync.Dispose(); }
             _groups.Clear();
         }
 
@@ -77,5 +79,8 @@ namespace FileSyncViewModel
     }
 }
 
-// TODO: Use MahAppsApplication
+
+// TODO: Add NotifyIcon
 // TODO: Add Shell Context Menus
+// TODO: Add shorcut keys
+// TODO: Confirm when remove
