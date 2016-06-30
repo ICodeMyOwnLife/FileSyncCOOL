@@ -53,8 +53,6 @@ namespace FileSyncViewModel
         public bool CanRemoveWatcher => SelectedWatcher != null && _watchers.Contains(SelectedWatcher);
         public Disposer Disposer { get; }
 
-        public CommonInteractionRequest FileRequest { get; } = new CommonInteractionRequest();
-
         public string Name
         {
             get { return _name; }
@@ -74,18 +72,19 @@ namespace FileSyncViewModel
         #region Methods
         public void AddFiles()
         {
-            FileRequest.Raise(new OpenFileDialogInfo { MultiSelect = true }, info =>
-            {
-                if (!info.Confirmed) return;
-
-                foreach (var watcher in info.FileNames.Select(file => new FileWatcher(file)))
+            FileSyncMainViewModel.RequestManager.FileRequestProvider.OpenFile(new OpenFileDialogInfo { MultiSelect = true },
+                info =>
                 {
-                    watcher.FileChanged += Watcher_FileChanged;
-                    watcher.FileRenamed += Watcher_FileRenamed;
-                    _watchers.Add(watcher);
-                    watcher.StartWatch();
-                }
-            });
+                    if (!info.Confirmed) return;
+
+                    foreach (var watcher in info.FileNames.Select(file => new FileWatcher(file)))
+                    {
+                        watcher.FileChanged += Watcher_FileChanged;
+                        watcher.FileRenamed += Watcher_FileRenamed;
+                        _watchers.Add(watcher);
+                        watcher.StartWatch();
+                    }
+                });
         }
 
         public void Dispose()
@@ -100,8 +99,14 @@ namespace FileSyncViewModel
         public void RemoveWatcher()
         {
             if (!CanRemoveWatcher) return;
-            SelectedWatcher.Dispose();
-            _watchers.Remove(SelectedWatcher);
+
+            FileSyncMainViewModel.RequestManager.ConfirmRequestProvider.Confirm("Remove Watcher",
+                $"Are you sure you want to remove watcher \"{SelectedWatcher}\"?",
+                () =>
+                {
+                    SelectedWatcher.Dispose();
+                    _watchers.Remove(SelectedWatcher);
+                });
         }
         #endregion
 
@@ -131,6 +136,3 @@ namespace FileSyncViewModel
         #endregion
     }
 }
-
-
-// TODO: Use CollectionCommand with StartAllCommand and StopAllCommand

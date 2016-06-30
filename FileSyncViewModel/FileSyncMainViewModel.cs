@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using CB.Model.Prism;
+using CB.Prism.Interactivity;
 using Prism.Commands;
 
 
@@ -34,6 +35,7 @@ namespace FileSyncViewModel
 
 
         #region  Properties & Indexers
+        public static RequestManager RequestManager { get; } = new RequestManager();
         public bool CanAddGroup => !string.IsNullOrEmpty(GroupName);
         public bool CanRemoveGroup => SelectedGroup != null && _groups.Contains(SelectedGroup);
 
@@ -72,8 +74,14 @@ namespace FileSyncViewModel
         public void RemoveGroup()
         {
             if (!CanRemoveGroup) return;
-            SelectedGroup.Dispose();
-            _groups.Remove(SelectedGroup);
+
+            RequestManager.ConfirmRequestProvider.Confirm("Remove Group",
+                $"Are you sure you want to remove group \"{SelectedGroup.Name}\"?",
+                () =>
+                {
+                    SelectedGroup.Dispose();
+                    _groups.Remove(SelectedGroup);
+                });
         }
         #endregion
     }
@@ -83,4 +91,3 @@ namespace FileSyncViewModel
 // TODO: Add NotifyIcon
 // TODO: Add Shell Context Menus
 // TODO: Add shorcut keys
-// TODO: Confirm when remove

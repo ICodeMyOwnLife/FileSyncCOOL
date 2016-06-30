@@ -28,11 +28,19 @@
         <StaticResource ResourceKey="MainViewModel" />
     </Window.DataContext>
 
+    <Window.InputBindings>
+        <KeyBinding Key="O" Modifiers="Control" Command="{Binding SelectedGroup.AddFilesCommand}" />
+    </Window.InputBindings>
+
     <xaml:WindowServices.FocusKeyMap>
         <xaml:FocusKeyMap>
-            <xaml:FocusKey Key="N" Modifier="Control" TargetName="txtName" />
+            <xaml:FocusKey Key="N" Modifiers="Control" TargetName="txtName" />
         </xaml:FocusKeyMap>
     </xaml:WindowServices.FocusKeyMap>
+
+    <xaml:MahAppsInteractionServices.RequestManager>
+        <Binding Path="RequestManager" />
+    </xaml:MahAppsInteractionServices.RequestManager>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -49,7 +57,7 @@
         <!--#region Main Region-->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="280" />
+                <ColumnDefinition MinWidth="250" MaxWidth="450" Width="300" />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
@@ -103,8 +111,10 @@
             </Grid>
 
             <v:FileSyncGroupView Grid.Column="1" DataContext="{Binding SelectedGroup}"
-                                     Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}" />
-            </Grid>
+                                 Visibility="{Binding Converter={StaticResource NullToVisibilityConverter}}" />
+
+            <GridSplitter Grid.Column="1" Style="{StaticResource GridSplitterStyle.Vertical}" />
+        </Grid>
         <!--#endregion-->
 
         <StatusBar Grid.Row="2" />

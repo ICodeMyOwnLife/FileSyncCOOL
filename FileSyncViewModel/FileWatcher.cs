@@ -120,5 +120,10 @@ namespace FileSyncViewModel
             _watcher.EnableRaisingEvents = true;
         }
         #endregion
+
+
+        #region Override
+        public override string ToString() => File;
+        #endregion
     }
 }
