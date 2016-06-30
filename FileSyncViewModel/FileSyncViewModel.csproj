@@ -72,6 +72,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Application\CB.Application.SingleInstanceApplication\CB.Application.SingleInstanceApplication.csproj">
+      <Project>{60475837-9675-4588-B662-B1CC09ED96B9}</Project>
+      <Name>CB.Application.SingleInstanceApplication</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Model\CB.Model.Common\CB.Model.Common.csproj">
       <Project>{33A5DF99-1312-4023-A6EF-EABB9848F5A6}</Project>
       <Name>CB.Model.Common</Name>

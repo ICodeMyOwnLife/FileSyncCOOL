@@ -1,8 +1,7 @@
 ﻿<mae:MahAppsApplication x:Class="FileSyncWindow.App"
                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                        xmlns:mae="clr-namespace:CB.WPF.MahAppsExtension;assembly=CB.WPF.MahAppsExtension"
-                        StartupUri="Views/MainWindow.xaml">
+                        xmlns:mae="clr-namespace:CB.WPF.MahAppsExtension;assembly=CB.WPF.MahAppsExtension">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -10,6 +9,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="Resources/IconsNonShared.xaml" />
 
                 <ResourceDictionary Source="Resources/Declaration.xaml" />
             </ResourceDictionary.MergedDictionaries>

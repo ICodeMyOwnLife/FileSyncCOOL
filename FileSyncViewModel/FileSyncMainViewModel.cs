@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using CB.Application.SingleInstanceApplication;
 using CB.Model.Prism;
 using CB.Prism.Interactivity;
 using Prism.Commands;
@@ -9,7 +10,7 @@ using Prism.Commands;
 
 namespace FileSyncViewModel
 {
-    public class FileSyncMainViewModel: PrismViewModelBase, IDisposable
+    public class FileSyncMainViewModel: PrismViewModelBase, IProcessArgs, IDisposable
     {
         #region Fields
         private string _groupName;
@@ -71,6 +72,11 @@ namespace FileSyncViewModel
             _groups.Clear();
         }
 
+        public void ProcessArgs(string[] args)
+        {
+            
+        }
+
         public void RemoveGroup()
         {
             if (!CanRemoveGroup) return;
@@ -88,6 +94,4 @@ namespace FileSyncViewModel
 }
 
 
-// TODO: Add NotifyIcon
 // TODO: Add Shell Context Menus
-// TODO: Add shorcut keys
