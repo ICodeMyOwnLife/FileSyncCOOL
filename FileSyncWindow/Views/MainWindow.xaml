@@ -32,11 +32,11 @@
         <KeyBinding Key="O" Modifiers="Control" Command="{Binding SelectedGroup.AddFilesCommand}" />
     </Window.InputBindings>
 
-    <xaml:WindowServices.FocusKeyMap>
+    <xaml:FocusServices.FocusKeyMap>
         <xaml:FocusKeyMap>
             <xaml:FocusKey Key="N" Modifiers="Control" TargetName="txtName" />
         </xaml:FocusKeyMap>
-    </xaml:WindowServices.FocusKeyMap>
+    </xaml:FocusServices.FocusKeyMap>
 
     <xaml:MahAppsInteractionServices.RequestManager>
         <Binding Path="RequestManager" />
