@@ -201,13 +201,13 @@
       <Project>{1ccb7f4e-228a-4a8e-a211-a032c9c8767b}</Project>
       <Name>CB.Xaml.AttachedProperties</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Xaml\CB.Xaml.Behaviors\CB.Xaml.Behaviors.csproj">
-      <Project>{033b6c10-b667-4b70-aa49-e61f6c8aa084}</Project>
-      <Name>CB.Xaml.Behaviors</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Xaml\CB.Xaml.Commands\CB.Xaml.Commands.csproj">
       <Project>{c5dc3209-4a92-4243-8188-adbd4fa87fc3}</Project>
       <Name>CB.Xaml.Commands</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Xaml\CB.Xaml.Interactivity\CB.Xaml.Interactivity.csproj">
+      <Project>{0c28cc8c-9e4d-4113-bfb2-0119f2a25d7e}</Project>
+      <Name>CB.Xaml.Interactivity</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\Libraries\DotNet\CB.Xaml\CB.Xaml.ValueConverters\CB.Xaml.ValueConverters.csproj">
       <Project>{3c46f9a4-7a8b-4588-872f-60b36e471fc5}</Project>

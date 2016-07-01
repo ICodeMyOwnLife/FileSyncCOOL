@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CB.Xaml.Behaviors", "..\..\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CB.Application.SingleInstanceApplication", "..\..\..\Libraries\DotNet\CB.Application\CB.Application.SingleInstanceApplication\CB.Application.SingleInstanceApplication.csproj", "{60475837-9675-4588-B662-B1CC09ED96B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CB.Xaml.Interactivity", "..\..\..\Libraries\DotNet\CB.Xaml\CB.Xaml.Interactivity\CB.Xaml.Interactivity.csproj", "{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +201,14 @@ Global
 		{60475837-9675-4588-B662-B1CC09ED96B9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60475837-9675-4588-B662-B1CC09ED96B9}.Release|x64.ActiveCfg = Release|Any CPU
 		{60475837-9675-4588-B662-B1CC09ED96B9}.Release|x64.Build.0 = Release|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Debug|x64.Build.0 = Debug|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Release|x64.ActiveCfg = Release|Any CPU
+		{0C28CC8C-9E4D-4113-BFB2-0119F2A25D7E}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

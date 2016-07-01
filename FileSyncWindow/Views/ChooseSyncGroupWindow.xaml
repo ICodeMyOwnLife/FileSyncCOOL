@@ -58,7 +58,21 @@
         </GroupBox>
 
         <GroupBox Grid.Row="1" Header="Select an existing group">
-            <ContentControl ContentTemplate="{StaticResource GroupsViewTemplate}" Content="{Binding}" />
+            <ContentControl ContentTemplate="{StaticResource GroupsViewTemplate}" Content="{Binding}">
+                <FrameworkElement.Resources>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="xaml:InteractionServices.Triggers">
+                            <Setter.Value>
+                                <xaml:TriggerList>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <xaml:ClickTriggerAction TargetName="cmdOk" />
+                                    </i:EventTrigger>
+                                </xaml:TriggerList>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </FrameworkElement.Resources>
+            </ContentControl>
         </GroupBox>
 
         <DockPanel Grid.Row="2">
