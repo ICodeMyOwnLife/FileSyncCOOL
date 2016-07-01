@@ -1,4 +1,4 @@
-﻿<mah:MetroWindow x:Class="FileSyncWindow.Views.ChooseSyncGroupWindow"
+﻿<mah:MetroWindow x:Class="FileSyncWindow.Views.ChooseSyncGroupWindow" x:Name="window"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,12 +7,23 @@
                  xmlns:vmd="clr-namespace:FileSyncViewModel;assembly=FileSyncViewModel"
                  xmlns:xaml="http://wpf.cb.com/xaml"
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                 xmlns:prm="http://prismlibrary.com/"
                  mc:Ignorable="d"
                  Title="ChooseSyncGroupWindow" Height="520" Width="500" Style="{StaticResource MetroWindowStyle}"
                  WindowStartupLocation="CenterScreen" d:DataContext="{d:DesignInstance vmd:ChooseSyncGroupViewModel}">
 
     <Window.Resources>
-        <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle.LeftAlign}" />
+        <xaml:TriggerList x:Key="DataGridCellTriggers" x:Shared="False">
+            <i:EventTrigger EventName="MouseDoubleClick">
+                <prm:InvokeCommandAction Command="{Binding ElementName=window, Path=DataContext.SelectGroupCommand}"
+                                         CommandParameter="{Binding}" />
+                <xaml:ClickTriggerAction Target="{x:Reference cmdOk}" />
+            </i:EventTrigger>
+        </xaml:TriggerList>
+
+        <Style x:Key="GroupsDataGridCell" TargetType="DataGridCell" BasedOn="{StaticResource DataGridCellStyle}">
+            <Setter Property="xaml:InteractionServices.Triggers" Value="{StaticResource DataGridCellTriggers}" />
+        </Style>
 
         <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
             <Setter Property="MinWidth" Value="130" />
@@ -43,7 +54,7 @@
                 </Grid.ColumnDefinitions>
 
 
-                <TextBlock Grid.Column="0" Text="Name:" />
+                <Label Grid.Column="0" Content="_Name:" Target="{Binding ElementName=txtName}" />
 
                 <TextBox x:Name="txtName" Grid.Column="1"
                          Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}">
@@ -52,40 +63,31 @@
                     </i:Interaction.Behaviors>
                 </TextBox>
 
-                <Button x:Name="cmdCreate" Grid.Column="2" Content="Create new group"
+                <Button x:Name="cmdCreate" Grid.Column="2" Content="_Create new group"
                         Command="{Binding CreateNewGroupCommand}" />
             </Grid>
         </GroupBox>
 
         <GroupBox Grid.Row="1" Header="Select an existing group">
-            <ContentControl ContentTemplate="{StaticResource GroupsViewTemplate}" Content="{Binding}">
-                <FrameworkElement.Resources>
-                    <Style TargetType="DataGridRow">
-                        <Setter Property="xaml:InteractionServices.Triggers">
-                            <Setter.Value>
-                                <xaml:TriggerList>
-                                    <i:EventTrigger EventName="MouseDoubleClick">
-                                        <xaml:ClickTriggerAction TargetName="cmdOk" />
-                                    </i:EventTrigger>
-                                </xaml:TriggerList>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </FrameworkElement.Resources>
-            </ContentControl>
+            <DataGrid Style="{StaticResource GroupsDataGrid}" CellStyle="{StaticResource GroupsDataGridCell}">
+                <DataGrid.Columns>
+                    <StaticResource ResourceKey="NameColumn" />
+                    <StaticResource ResourceKey="CountColumn" />
+                </DataGrid.Columns>
+            </DataGrid>
         </GroupBox>
 
         <DockPanel Grid.Row="2">
-            <TextBlock Text="Selected Group:" />
+            <TextBlock Text="Selected Group:" Style="{StaticResource TextBlockStyle.LeftAlign}" />
 
-            <TextBlock FontSize="16" FontWeight="Bold"
+            <TextBlock FontSize="16" FontWeight="Bold" Style="{StaticResource TextBlockStyle.LeftAlign}"
                        Text="{Binding SelectedGroup.Name}" />
         </DockPanel>
 
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button x:Name="cmdOk" Content="OK" IsEnabled="{Binding CanOk}"
+            <Button x:Name="cmdOk" Content="_OK" IsEnabled="{Binding CanOk}"
                     xaml:ButtonServices.IsOKButton="True" />
-            <Button Content="Cancel" IsCancel="True" />
+            <Button Content="_Cancel" IsCancel="True" />
         </StackPanel>
     </Grid>
 </mah:MetroWindow>

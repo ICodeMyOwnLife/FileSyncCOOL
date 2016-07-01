@@ -24,12 +24,15 @@ namespace FileSyncViewModel
             Groups = groups;
             CreateNewGroupCommand =
                 new DelegateCommand(CreateNewGroup, () => CanCreateNewGroup).ObservesProperty(() => CanCreateNewGroup);
+            SelectGroupCommand = new DelegateCommand<FileSyncGroup>(SelectGroup);
         }
         #endregion
 
 
         #region  Commands
         public ICommand CreateNewGroupCommand { get; }
+
+        public ICommand SelectGroupCommand { get; }
         #endregion
 
 
@@ -76,6 +79,9 @@ namespace FileSyncViewModel
             SelectedGroup = new FileSyncGroup(GroupName);
             GroupName = null;
         }
+
+        public void SelectGroup(FileSyncGroup group)
+            => SelectedGroup = group;
         #endregion
     }
 }

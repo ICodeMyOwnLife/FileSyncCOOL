@@ -15,11 +15,12 @@
                  Style="{StaticResource MetroWindowStyle}" WindowStartupLocation="CenterScreen"
                  d:DataContext="{d:DesignInstance vmd:FileSyncMainViewModel, d:IsDesignTimeCreatable=True}"
                  xaml:WindowServices.DisposeDataContextWhenClosed="True"
-                 xaml:MetroWindowServices.PressCloseToHide="True"
+                 xaml:WindowServices.CloseToHide="True"
                  ContextMenu="{StaticResource MainContextMenu}"
                  xaml:MahAppsInteractionServices.RequestManager="{Binding Source={x:Static vmd:FileSyncMainViewModel.RequestManager}}">
 
     <Window.InputBindings>
+        <KeyBinding Key="F4" Modifiers="Alt" Command="NotACommand" />
         <KeyBinding Key="O" Modifiers="Control" Command="{Binding SelectedGroup.AddFilesCommand}" />
     </Window.InputBindings>
 
@@ -79,11 +80,16 @@
                 </Grid.RowDefinitions>
 
                 <GroupBox Header="GROUPS">
-                    <ContentControl ContentTemplate="{StaticResource GroupsViewTemplate}" Content="{Binding}">
+                    <DataGrid Style="{StaticResource GroupsDataGrid}">
+                        <DataGrid.Columns>
+                            <StaticResource ResourceKey="NameColumn" />
+                            <StaticResource ResourceKey="CountColumn" />
+                        </DataGrid.Columns>
+
                         <UIElement.InputBindings>
                             <KeyBinding Key="Delete" Command="{Binding RemoveGroupCommand}" />
                         </UIElement.InputBindings>
-                    </ContentControl>
+                    </DataGrid>
                 </GroupBox>
 
                 <Grid Grid.Row="1">
@@ -108,9 +114,9 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <Button x:Name="cmdAdd" Grid.Column="0" Content="Add Group" HorizontalAlignment="Stretch"
+                    <Button x:Name="cmdAdd" Grid.Column="0" Content="A_dd Group" HorizontalAlignment="Stretch"
                             Command="{Binding AddGroupCommand}" />
-                    <Button Grid.Column="1" Content="Remove Group" HorizontalAlignment="Stretch"
+                    <Button Grid.Column="1" Content="_Remove Group" HorizontalAlignment="Stretch"
                             Command="{Binding RemoveGroupCommand}" />
                 </Grid>
             </Grid>

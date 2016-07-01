@@ -112,5 +112,7 @@ namespace FileSyncViewModel
 
 // TODO: Extend RequestManager: mechanism to add custom providers and triggers
 // TODO: Request async???
-// TODO: Create DelegateEventBehavior, Test EnterToClickBehavior, ChooseGroupWindow: double click to choose and close
-// TODO: WindowServices CloseToHide: when Alt+F4 is pressed
+// TODO: Distinct group name
+// TODO: FileWatcher context menu: remove, open, open location, start, stop -> static FileCommands
+// TODO: Watcher list allow inner drag-drop, drop-in to add, drag-out to remove
+// TODO: Custom themes
