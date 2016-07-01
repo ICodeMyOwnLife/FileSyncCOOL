@@ -9,13 +9,15 @@ namespace FileSyncWindow
 
     {
         #region Fields
-        private FileSyncMainViewModel _mainViewModel;
+        private readonly FileSyncMainViewModel _mainViewModel = new FileSyncMainViewModel();
         #endregion
 
 
         #region Methods
         public void ProcessArgs(string[] args)
-            => _mainViewModel?.ProcessArgs(args);
+        {
+            _mainViewModel.ProcessFiles(args);
+        }
         #endregion
 
 
@@ -23,9 +25,9 @@ namespace FileSyncWindow
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-            var window = new MainWindow();
+            var window = new MainWindow { DataContext = _mainViewModel };
+            window.Loaded += (sender, args) => ProcessArgs(e.Args);
             MainWindow = window;
-            _mainViewModel = FindResource("MainViewModel") as FileSyncMainViewModel;
             window.Show();
         }
         #endregion

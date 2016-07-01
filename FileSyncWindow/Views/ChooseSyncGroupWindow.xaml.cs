@@ -1,4 +1,4 @@
-﻿namespace MahApps.Extended.Application
+﻿namespace FileSyncWindow.Views
 {
     public partial class ChooseSyncGroupWindow
     {

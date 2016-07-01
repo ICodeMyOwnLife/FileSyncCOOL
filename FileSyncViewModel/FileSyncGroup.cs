@@ -70,20 +70,27 @@ namespace FileSyncViewModel
 
 
         #region Methods
+        public void AddFiles(string[] files)
+        {
+            foreach (var watcher in files.Select(file => new FileWatcher(file)))
+            {
+                watcher.FileChanged += Watcher_FileChanged;
+                watcher.FileRenamed += Watcher_FileRenamed;
+                _watchers.Add(watcher);
+                watcher.StartWatch();
+            }
+        }
+
         public void AddFiles()
         {
-            FileSyncMainViewModel.RequestManager.FileRequestProvider.OpenFile(new OpenFileDialogInfo { MultiSelect = true },
+            FileSyncMainViewModel.RequestManager.FileRequestProvider.OpenFile(
+                new OpenFileDialogInfo { MultiSelect = true },
                 info =>
                 {
                     if (!info.Confirmed) return;
 
-                    foreach (var watcher in info.FileNames.Select(file => new FileWatcher(file)))
-                    {
-                        watcher.FileChanged += Watcher_FileChanged;
-                        watcher.FileRenamed += Watcher_FileRenamed;
-                        _watchers.Add(watcher);
-                        watcher.StartWatch();
-                    }
+                    var files = info.FileNames;
+                    AddFiles(files);
                 });
         }
 

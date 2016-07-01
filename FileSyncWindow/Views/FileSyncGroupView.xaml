@@ -4,9 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vmd="clr-namespace:FileSyncViewModel;assembly=FileSyncViewModel"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:prm="http://prismlibrary.com/"
-             xmlns:xaml="http://wpf.cb.com/xaml"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="600" d:DataContext="{d:DesignInstance vmd:FileSyncGroup}">
 
@@ -47,13 +44,16 @@
                 <TextBlock DockPanel.Dock="Top" Style="{StaticResource TextBlockStyle.CenterAlign}"
                            FontSize="32" FontWeight="Bold" Text="{Binding Name}" />
 
-                <Line DockPanel.Dock="Top" Height="2" X1="0" Y1="0" X2="300" Y2="0" 
-                      HorizontalAlignment="Center" Stroke="{DynamicResource GrayBrush2}" StrokeThickness="1" />
+                <Line DockPanel.Dock="Top" Style="{StaticResource LineStyle}" />
 
                 <ListBox ItemTemplate="{StaticResource FileWatcherTemplate}"
                          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
                          ItemsSource="{Binding Watchers}" SelectedItem="{Binding SelectedWatcher}"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <UIElement.InputBindings>
+                        <KeyBinding Key="Delete" Command="{Binding RemoveWatcherCommand}" />
+                    </UIElement.InputBindings>
+                </ListBox>
             </DockPanel>
         </Border>
 

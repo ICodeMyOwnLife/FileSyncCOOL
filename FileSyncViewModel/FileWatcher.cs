@@ -29,8 +29,7 @@ namespace FileSyncViewModel
             _directory = Path.GetDirectoryName(file);
             if (_directory == null)
             {
-                //UNDONE
-                return;
+                throw new NotSupportedException(file);
             }
             var fileName = Path.GetFileName(file);
 

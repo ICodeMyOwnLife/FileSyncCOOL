@@ -66,9 +66,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChooseSyncGroupViewModel.cs" />
     <Compile Include="FileSyncGroup.cs" />
     <Compile Include="FileSyncMainViewModel.cs" />
     <Compile Include="FileWatcher.cs" />
+    <Compile Include="ISelectGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

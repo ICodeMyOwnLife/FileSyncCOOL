@@ -1,49 +1,76 @@
-﻿<mah:MetroWindow x:Class="MahApps.Extended.Application.ChooseSyncGroupWindow"
+﻿<mah:MetroWindow x:Class="FileSyncWindow.Views.ChooseSyncGroupWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:vmd="clr-namespace:FileSyncViewModel;assembly=FileSyncViewModel"
+                 xmlns:xaml="http://wpf.cb.com/xaml"
+                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                  mc:Ignorable="d"
-                 Title="ChooseSyncGroupWindow" Height="600" Width="800" Style="{StaticResource MetroWindowStyle}"
-                 WindowStartupLocation="CenterScreen">
+                 Title="ChooseSyncGroupWindow" Height="520" Width="500" Style="{StaticResource MetroWindowStyle}"
+                 WindowStartupLocation="CenterScreen" d:DataContext="{d:DesignInstance vmd:ChooseSyncGroupViewModel}">
 
     <Window.Resources>
         <Style TargetType="TextBlock" BasedOn="{StaticResource TextBlockStyle.LeftAlign}" />
+
         <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
             <Setter Property="MinWidth" Value="130" />
         </Style>
     </Window.Resources>
 
+    <xaml:FocusServices.FocusKeyMap>
+        <xaml:FocusKeyMap>
+            <xaml:FocusKey Key="N" Modifiers="Control" TargetName="txtName" />
+            <xaml:FocusKey Key="Enter" Modifiers="Control" TargetName="cmdOk" />
+        </xaml:FocusKeyMap>
+    </xaml:FocusServices.FocusKeyMap>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0" Text="Create a new group:" />
+        <GroupBox Grid.Row="0" Header="Create a new group">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Column="0" Text="Name:" />
-            <TextBox Grid.Column="1" />
-            <Button Grid.Column="2" Content="Create new group" />
-        </Grid>
+                <TextBlock Grid.Column="0" Text="Name:" />
 
-        <TextBlock Grid.Row="2" Text="Or choose an existing group:" />
+                <TextBox x:Name="txtName" Grid.Column="1"
+                         Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}">
+                    <i:Interaction.Behaviors>
+                        <xaml:TextBoxEnterToClickBehavior TargetName="cmdCreate" />
+                    </i:Interaction.Behaviors>
+                </TextBox>
 
-        <ListBox Grid.Row="3" />
+                <Button x:Name="cmdCreate" Grid.Column="2" Content="Create new group"
+                        Command="{Binding CreateNewGroupCommand}" />
+            </Grid>
+        </GroupBox>
 
-        <StackPanel Grid.Row="4" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Choose this group" />
+        <GroupBox Grid.Row="1" Header="Select an existing group">
+            <ContentControl ContentTemplate="{StaticResource GroupsViewTemplate}" Content="{Binding}" />
+        </GroupBox>
+
+        <DockPanel Grid.Row="2">
+            <TextBlock Text="Selected Group:" />
+
+            <TextBlock FontSize="16" FontWeight="Bold"
+                       Text="{Binding SelectedGroup.Name}" />
+        </DockPanel>
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button x:Name="cmdOk" Content="OK" IsEnabled="{Binding CanOk}"
+                    xaml:ButtonServices.IsOKButton="True" />
             <Button Content="Cancel" IsCancel="True" />
         </StackPanel>
     </Grid>

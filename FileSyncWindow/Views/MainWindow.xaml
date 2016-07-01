@@ -9,27 +9,15 @@
                  xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                  xmlns:xaml="http://wpf.cb.com/xaml"
                  xmlns:tb="http://www.hardcodet.net/taskbar"
+                 xmlns:prm="http://prismlibrary.com/"
                  mc:Ignorable="d"
-                 Title="File Sync COOL" Height="600" Width="960" Icon="../sync.ico"
+                 Title="File Sync COOL" Height="600" Width="960" Icon="../sync.ico" AllowDrop="True"
                  Style="{StaticResource MetroWindowStyle}" WindowStartupLocation="CenterScreen"
+                 d:DataContext="{d:DesignInstance vmd:FileSyncMainViewModel, d:IsDesignTimeCreatable=True}"
                  xaml:WindowServices.DisposeDataContextWhenClosed="True"
-                 xaml:MetroWindowServices.PressCloseToHide="True" ContextMenu="{StaticResource MainContextMenu}">
-
-    <Window.Resources>
-        <vmd:FileSyncMainViewModel x:Key="MainViewModel" />
-
-        <DataTemplate x:Key="NameColumnTemplate" DataType="vmd:FileSyncGroup">
-            <TextBlock Text="{Binding Name}" />
-        </DataTemplate>
-
-        <DataTemplate x:Key="CountColumnTemplate" DataType="vmd:FileSyncGroup">
-            <TextBlock Text="{Binding Watchers.Count}" HorizontalAlignment="Center" />
-        </DataTemplate>
-    </Window.Resources>
-
-    <Window.DataContext>
-        <StaticResource ResourceKey="MainViewModel" />
-    </Window.DataContext>
+                 xaml:MetroWindowServices.PressCloseToHide="True"
+                 ContextMenu="{StaticResource MainContextMenu}"
+                 xaml:MahAppsInteractionServices.RequestManager="{Binding Source={x:Static vmd:FileSyncMainViewModel.RequestManager}}">
 
     <Window.InputBindings>
         <KeyBinding Key="O" Modifiers="Control" Command="{Binding SelectedGroup.AddFilesCommand}" />
@@ -41,9 +29,15 @@
         </xaml:FocusKeyMap>
     </xaml:FocusServices.FocusKeyMap>
 
-    <xaml:MahAppsInteractionServices.RequestManager>
-        <Binding Path="RequestManager" />
-    </xaml:MahAppsInteractionServices.RequestManager>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Drop">
+            <prm:InvokeCommandAction Command="{Binding DragDropCommandProvider.DropFilesCommand}" />
+        </i:EventTrigger>
+        <prm:InteractionRequestTrigger SourceObject="{Binding ChooseGroupRequest}">
+            <xaml:WindowTriggerAction CenterOverAssociatedObject="True" IsModal="True"
+                                      WindowType="v:ChooseSyncGroupWindow" />
+        </prm:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -85,16 +79,11 @@
                 </Grid.RowDefinitions>
 
                 <GroupBox Header="GROUPS">
-                    <DataGrid IsReadOnly="True" AutoGenerateColumns="False" Margin="0"
-                              ItemsSource="{Binding Groups}" SelectedItem="{Binding SelectedGroup}">
-                        <DataGrid.Columns>
-                            <DataGridTemplateColumn Header="Name" SortMemberPath="Name" Width="*"
-                                                    CellTemplate="{StaticResource NameColumnTemplate}" />
-                            <DataGridTemplateColumn Header="Count" SortMemberPath="Watchers.Count" Width="70"
-                                                    CellTemplate="{StaticResource CountColumnTemplate}"
-                                                    HeaderStyle="{StaticResource DataGridColumnHeaderStyle.CenterAlign}" />
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <ContentControl ContentTemplate="{StaticResource GroupsViewTemplate}" Content="{Binding}">
+                        <UIElement.InputBindings>
+                            <KeyBinding Key="Delete" Command="{Binding RemoveGroupCommand}" />
+                        </UIElement.InputBindings>
+                    </ContentControl>
                 </GroupBox>
 
                 <Grid Grid.Row="1">
