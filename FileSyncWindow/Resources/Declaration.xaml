@@ -41,10 +41,6 @@
         <Setter Property="StrokeThickness" Value="1" />
     </Style>
 
-    <Style TargetType="MenuItem" BasedOn="{StaticResource MenuItemStyle}">
-        <Setter Property="MaxHeight" Value="32" />
-    </Style>
-
     <Style x:Key="GroupsDataGrid" TargetType="DataGrid" BasedOn="{StaticResource DataGridStyle}">
         <Setter Property="AutoGenerateColumns" Value="False" />
         <Setter Property="IsReadOnly" Value="True" />

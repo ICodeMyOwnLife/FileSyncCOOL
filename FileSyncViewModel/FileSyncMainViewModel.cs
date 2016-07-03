@@ -112,7 +112,11 @@ namespace FileSyncViewModel
 
 // TODO: Extend RequestManager: mechanism to add custom providers and triggers
 // TODO: Request async???
-// TODO: Distinct group name
+// TODO: Distinct group name, distinct watcher file - Use input validation: Required, Distinct
 // TODO: FileWatcher context menu: remove, open, open location, start, stop -> static FileCommands
 // TODO: Watcher list allow inner drag-drop, drop-in to add, drag-out to remove
 // TODO: Custom themes
+// TODO: Sync Folder?
+// TODO: Sync content, name, existence, attributes
+// TODO: Test whether watching is running in an other thread
+// TODO: Notify when file/folder changed (use NotifyIcon and ShowNotificationAction)
