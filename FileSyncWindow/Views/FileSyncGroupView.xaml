@@ -44,7 +44,7 @@
                 <TextBlock DockPanel.Dock="Top" Style="{StaticResource TextBlockStyle.CenterAlign}"
                            FontSize="32" FontWeight="Bold" Text="{Binding Name}" />
 
-                <Line DockPanel.Dock="Top" Style="{StaticResource LineStyle}" />
+                <Line DockPanel.Dock="Top" Style="{StaticResource LineStyle}" Margin="0,8,0,16" />
 
                 <ListBox ItemTemplate="{StaticResource FileWatcherTemplate}"
                          HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch"
